@@ -14,7 +14,7 @@ public partial struct FireProjectileSystem : ISystem
         foreach (var (projectilePrefab, transform, lifeTime) in SystemAPI.Query<RefRO<ProjectilePrefab>, RefRO<LocalTransform>, RefRO<LifeTime>>().WithAll<FireProjectileTag>())
         { 
             var Projectile = ecb.Instantiate(projectilePrefab.ValueRO.Value);
-            var ProjectilePrefabValues = state.EntityManager.GetComponentData<LocalTransform>(projectilePrefab.ValueRO.Value);
+            var ProjectilePrefabValues = state.EntityManager.GetComponentData<LocalTransform>(projectilePrefab.ValueRO.Value); // To get the scale
             var ProjectileTransform = LocalTransform.FromPositionRotationScale(transform.ValueRO.Position, transform.ValueRO.Rotation, ProjectilePrefabValues.Scale);
             ecb.SetComponent(Projectile, ProjectileTransform);
             ecb.AddComponent(Projectile, new ProjectileLifeTime { Value = lifeTime.ValueRO.Value });

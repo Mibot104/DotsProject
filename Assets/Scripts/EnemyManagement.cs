@@ -20,7 +20,7 @@ public partial struct EnemyManagement : ISystem
     {
         float deltaTime = SystemAPI.Time.DeltaTime;
         updateTime -= deltaTime;
-        if (updateTime <= 0)
+        if (updateTime <= 0) // Updates less frequently for performance
         {
             updateTime = 0.1f;
             var playerTransform = SystemAPI.GetSingletonEntity<PlayerTag>();
@@ -29,13 +29,13 @@ public partial struct EnemyManagement : ISystem
             foreach (var (direction, enemyTransform, followPlayerTime) in SystemAPI.Query<RefRW<EnemyDirection>, RefRO<LocalTransform>, RefRW<FollowPlayerTime>>())
             {
                 
-                if (followPlayerTime.ValueRW.Value > 0)
+                if (followPlayerTime.ValueRW.Value > 0) // If it should locate the player
                 {
                     followPlayerTime.ValueRW.Value -= updateTime;
                     direction.ValueRW.Value = math.normalizesafe(playerTransformPosition.xy - enemyTransform.ValueRO.Position.xy);
                 }
                 
-                if (math.length(playerTransformPosition.xy - enemyTransform.ValueRO.Position.xy) < 0.5f)
+                if (math.length(playerTransformPosition.xy - enemyTransform.ValueRO.Position.xy) < 0.5f) // If it is close to the player
                 {
                     var destroyJob = new AddDestroy
                     {
